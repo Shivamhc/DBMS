@@ -10,7 +10,7 @@ export const Home = () => {
       <Header />
       <AddRestaurants />
       <Search />
-      <RestaurantsList />
+      {/* <RestaurantsList /> */}
     </div>
   );
 };

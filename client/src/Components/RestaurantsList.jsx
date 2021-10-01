@@ -77,19 +77,6 @@ export const RestaurantsList = (props) => {
                 </tr>
               );
             })}
-          {/* <tr>
-            <td>Hello1</td>
-            <td>Hello1</td>
-            <td>Hello3</td>
-            <td>Hello1</td>
-
-            <td>
-              <div className="btn btn-warning">Update</div>
-            </td>
-            <td>
-              <div className="btn btn-danger">Update</div>
-            </td>
-          </tr> */}
         </tbody>
       </table>
     </div>

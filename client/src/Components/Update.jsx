@@ -10,12 +10,15 @@ export const Update = (props) => {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [priceRange, setPriceRange] = useState("");
-  console.log(id);
+  //console.log(id);
 
   useEffect(() => {
     try {
       const fetchData = async () => {
         const response = await RestaurantFinder.get(`/restaurants/${id}`);
+        setName(response.data.data.restaurant.name);
+        setLocation(response.data.data.restaurant.location);
+        setPriceRange(response.data.data.restaurant.price_range);
         console.log(response.data.data);
       };
       fetchData();
@@ -23,7 +26,7 @@ export const Update = (props) => {
   }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const updatedRestaurant = await RestaurantFinder.put(`/${id}`, {
+    const updatedRestaurant = await RestaurantFinder.put(`/restaurants/${id}`, {
       name,
       location,
       price_range: priceRange,
