@@ -2,13 +2,15 @@ import React, { useContext, useEffect } from "react";
 import RestaurantFinder from "../APIs/RestaurantFinder";
 import { RestaurantsContext } from "../Context/RestaurantContext";
 import { useHistory } from "react-router-dom";
+import StarRating from "./StarRating";
 
-export const RestaurantsList = (props) => {
+const RestaurantsList = (props) => {
   const { restaurants, setRestaurants } = useContext(RestaurantsContext);
 
   let history = useHistory();
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id, e) => {
+    e.stopPropagation();
     try {
       const response = await RestaurantFinder.delete(`/restaurants/${id}`);
       setRestaurants(
@@ -21,7 +23,8 @@ export const RestaurantsList = (props) => {
     }
   };
 
-  const handleUpdate = (id) => {
+  const handleUpdate = (id, e) => {
+    e.stopPropagation();
     history.push(`/restaurants/${id}/update`);
   };
   useEffect(() => {
@@ -35,6 +38,23 @@ export const RestaurantsList = (props) => {
     };
     fetchData();
   }, []);
+
+  const handleRestaurantSelect = (id) => {
+    history.push(`/restaurants/${id}`);
+  };
+
+  const renderRating = (restaurant) => {
+    if (!restaurant.count) {
+      return <span className="text-warning">0 reviews</span>;
+    }
+    return (
+      <>
+        <StarRating rating={restaurant.average_rating} />
+        <span className="text-warning ml-1">({restaurant.count})</span>
+      </>
+    );
+  };
+
   return (
     <div className="list-group">
       <table className="table table-hover align-middle">
@@ -53,14 +73,18 @@ export const RestaurantsList = (props) => {
           {restaurants &&
             restaurants.map((restaurant) => {
               return (
-                <tr key={restaurant.id}>
+                <tr
+                  key={restaurant.id}
+                  //onClick={() => handleRestaurantSelect(restuarant.id)}
+                  onClick={() => handleRestaurantSelect(restaurant.id)}
+                >
                   <td>{restaurant.name}</td>
                   <td>{restaurant.location}</td>
                   <td>{restaurant.price_range}</td>
-                  <td>reviews</td>
+                  <td>{renderRating(restaurant)}</td>
                   <td>
                     <div
-                      onClick={() => handleUpdate(restaurant.id)}
+                      onClick={(e) => handleUpdate(restaurant.id, e)}
                       className="btn btn-warning"
                     >
                       Edit
@@ -68,7 +92,7 @@ export const RestaurantsList = (props) => {
                   </td>
                   <td>
                     <div
-                      onClick={() => handleDelete(restaurant.id)}
+                      onClick={(e) => handleDelete(restaurant.id, e)}
                       className="btn btn-danger"
                     >
                       Delete
@@ -82,3 +106,5 @@ export const RestaurantsList = (props) => {
     </div>
   );
 };
+
+export default RestaurantsList;

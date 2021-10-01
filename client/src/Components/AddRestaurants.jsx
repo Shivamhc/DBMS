@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import RestaurantFinder from "../APIs/RestaurantFinder";
 import { RestaurantsContext } from "../Context/RestaurantContext";
 
-export const AddRestaurants = () => {
+const AddRestaurants = () => {
   const { addRestaurants } = useContext(RestaurantsContext);
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
@@ -68,3 +68,5 @@ export const AddRestaurants = () => {
     </div>
   );
 };
+
+export default AddRestaurants;

@@ -1,7 +1,7 @@
 import React from "react";
-import { AddRestaurants } from "../Components/AddRestaurants";
+import AddRestaurants from "../Components/AddRestaurants";
 import { Header } from "../Components/Header";
-import { RestaurantsList } from "../Components/RestaurantsList";
+import RestaurantsList from "../Components/RestaurantsList";
 import { Search } from "../Components/Search";
 
 export const Home = () => {
@@ -9,8 +9,8 @@ export const Home = () => {
     <div>
       <Header />
       <AddRestaurants />
-      <Search />
-      {/* <RestaurantsList /> */}
+      {/* <Search /> */}
+      <RestaurantsList />
     </div>
   );
 };
