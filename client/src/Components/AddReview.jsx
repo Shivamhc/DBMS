@@ -24,8 +24,10 @@ const AddReview = () => {
           rating,
         }
       );
-      history.push("/");
+
       history.push(location.pathname);
+      history.push(`/restaurants/${id}`);
+      //console.log(location.pathname);
     } catch (err) {}
   };
 

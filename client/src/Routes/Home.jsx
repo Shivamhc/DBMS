@@ -8,9 +8,9 @@ export const Home = () => {
   return (
     <div>
       <Header />
-      <AddRestaurants />
-      {/* <Search /> */}
-      <RestaurantsList />
+      {/* <AddRestaurants /> */}
+      <Search />
+      {/* <RestaurantsList /> */}
     </div>
   );
 };

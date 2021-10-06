@@ -1,8 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route } from "react-router-dom";
+import Review from "./Routes/Review";
 import { RestaurantsContextProvider } from "./Context/RestaurantContext";
 import { Home } from "./Routes/Home";
 import RestaurantDetailPage from "./Routes/RestaurantDetailPage";
+//import image from "./Image/main.jpg";
 
 import { UpdateRestaurants } from "./Routes/UpdateRestaurants";
 
@@ -22,6 +24,7 @@ const App = () => {
             path="/restaurants/:id"
             component={RestaurantDetailPage}
           />
+          <Route exact path="/restaurants/:id/AddReview" component={Review} />
         </Router>
       </div>
     </RestaurantsContextProvider>
