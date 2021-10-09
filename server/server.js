@@ -11,6 +11,12 @@ app.use(express.json());
 
 //CREATING APIs
 
+//REGISTER AND LOGIN ROUTES
+app.use("/auth", require("./Routes/jwtAuth"));
+
+//DASHBOARD ROUTES
+app.use("/dashboard", require("./Routes/dashboard"));
+
 //GET ALL RESTAURANTS
 app.get("/api/v1/restaurants", async (req, res) => {
   try {
