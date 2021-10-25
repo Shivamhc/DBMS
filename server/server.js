@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const db = require("./DB");
+const router = require("express").Router();
 
 const app = express();
 
@@ -11,21 +12,14 @@ app.use(express.json());
 
 //CREATING APIs
 
-//REGISTER AND LOGIN ROUTES
-app.use("/auth", require("./Routes/jwtAuth"));
-
-//DASHBOARD ROUTES
-app.use("/dashboard", require("./Routes/dashboard"));
-
 //GET ALL RESTAURANTS
+
 app.get("/api/v1/restaurants", async (req, res) => {
   try {
     const restaurantRatingsData = await db.query(
       "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1) as average_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id;"
     );
 
-    //const results = await db.query("select * from restaurants");
-    // console.log(results.rows);
     res.status(200).json({
       status: "success",
       results: restaurantRatingsData.rows.length,
@@ -33,7 +27,6 @@ app.get("/api/v1/restaurants", async (req, res) => {
         restaurants: restaurantRatingsData.rows,
       },
     });
-    //console.log("Get all restaurants");
   } catch (err) {
     console.log(err);
   }
@@ -51,11 +44,11 @@ app.get("/api/v1/restaurants/:id", async (req, res) => {
       `select * from reviews where restaurant_id=$1`,
       [req.params.id]
     );
-    //console.log(results.rows[0]);
+    console.log(restaurant.rows);
     res.status(200).json({
       status: "success",
       data: {
-        restaurant: restaurant.rows[0],
+        restaurants: restaurant.rows,
         reviews: reviews.rows,
       },
     });
@@ -67,13 +60,11 @@ app.get("/api/v1/restaurants/:id", async (req, res) => {
 //GET A RESTAURANT USING LOCATION
 app.get("/api/v1/searchRestaurant", async (req, res) => {
   try {
-    //console.log("You are dead");
-    //console.log(req.query.location);
     const results = await db.query(
-      "SELECT * FROM restaurants WHERE location LIKE INITCAP($1)",
+      "select * from restaurants left join (select restaurant_id, COUNT(*), TRUNC(AVG(rating),1) as average_rating from reviews group by restaurant_id) reviews on restaurants.id = reviews.restaurant_id  where location LIKE INITCAP($1)",
       ["%" + req.query.location + "%"]
     );
-    //console.log(results.rows);
+
     res.status(200).json({
       status: "success",
       data: {
@@ -94,7 +85,7 @@ app.post("/api/v1/restaurants", async (req, res) => {
       "INSERT INTO restaurants (name,location,price_range) values ($1,$2,$3) returning *",
       [req.body.name, req.body.location, req.body.price_range]
     );
-    //console.log(results);
+
     res.status(201).json({
       status: "success",
       data: {
@@ -114,7 +105,6 @@ app.put("/api/v1/restaurants/:id", async (req, res) => {
       "UPDATE restaurants SET name=$1,location=$2,price_range=$3 where id=$4 returning *",
       [req.body.name, req.body.location, req.body.price_range, req.params.id]
     );
-    // console.log(results);
 
     res.status(200).json({
       status: "success",
@@ -134,12 +124,13 @@ app.delete("/api/v1/restaurants/:id", async (req, res) => {
     const results = db.query("DELETE FROM restaurants where id=$1", [
       req.params.id,
     ]);
-    //console.log("Deleting a restaurant");
+    console.log("Deleting a restaurant");
     res.status(204).json({
       status: "success",
     });
   } catch (err) {
-    console.log(err);
+    console.log("hello");
+    console.log(err.message);
   }
 });
 

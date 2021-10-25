@@ -1,5 +1,4 @@
 import React from "react";
-import { RestaurantsContext } from "../Context/RestaurantContext";
 
 const StarRating = ({ rating }) => {
   const stars = [];

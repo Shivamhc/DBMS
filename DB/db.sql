@@ -22,4 +22,6 @@ CREATE TABLE reviews(
     rating INT NOT NULL check(rating>=1 and rating <=5)
 );
 
+alter table reviews add constraint reviews_restaurant_id_fkey foreign key (restaurant_id) references restaurants(id) on delete cascade on update cascade;
+
 

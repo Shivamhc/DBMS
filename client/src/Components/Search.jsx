@@ -4,29 +4,10 @@ import RestaurantFinder from "../APIs/RestaurantFinder";
 import StarRating from "./StarRating";
 
 export const Search = (props) => {
-  //const { id } = useParams();
   let history = useHistory();
   const [restaurants, setRestaurants] = useState([]);
   const [search, setSearch] = useState("");
-  var isSubmit = false;
-  //const [selectedRestaurant, setselectedRestaurant] = useState(null);
-
-  // useEffect(() => {
-  //   try {
-  //     const fetchData = async () => {
-  //       //e.preventDefault();
-  //       const response = await RestaurantFinder.get(
-  //         `/searchRestaurant/?location=${search}`
-  //       );
-
-  //       console.log("hello");
-  //       console.log(response.data.data);
-  //       setRestaurants(response.data.data.restaurants);
-  //       console.log("hello");
-  //     };
-  //     fetchData();
-  //   } catch (err) {}
-  // }, []);
+  const [name, setName] = useState("");
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -35,11 +16,8 @@ export const Search = (props) => {
         const response = await RestaurantFinder.get(
           `/searchRestaurant/?location=${search}`
         );
-        console.log("hello1");
         console.log(response.data.data.restaurants);
-
         setRestaurants(response.data.data.restaurants);
-        // isSubmit = true;
       }
     } catch (err) {
       console.log(err);
@@ -49,17 +27,17 @@ export const Search = (props) => {
     setSearch(e.target.value);
   };
 
-  const handleUpdate = (id) => {
-    history.push(`/restaurants/${id}/update`);
-  };
-
   const handleRestaurantSelect = (id) => {
     history.push(`/restaurants/${id}`);
   };
 
   const renderRating = (restaurant) => {
     if (!restaurant.count) {
-      return <span className="text-warning">0 reviews</span>;
+      return (
+        <span className="text" style={{ color: "#FF9300" }}>
+          0 reviews
+        </span>
+      );
     }
     return (
       <>
@@ -72,11 +50,11 @@ export const Search = (props) => {
       try {
         console.log("response");
         const response = await RestaurantFinder.get(`/restaurants`);
-        //console.log(response);
-
+        console.log(response.data.data.restaurants);
         setRestaurants(response.data.data.restaurants);
       } catch (err) {}
     };
+
     fetchData();
   }, []);
 
@@ -84,34 +62,46 @@ export const Search = (props) => {
     <div
       className="justify-content-center "
       style={{
-        paddingTop: "180px",
+        paddingTop: "120px",
         marginRight: "100px",
         marginLeft: "120px",
         paddingBottom: "180px",
       }}
     >
-      <form action="">
+      <form action="" style={{}}>
         <div className="form-row ">
           <div className="col">
             <input
               value={search}
               onChange={handleChange}
               type="search"
-              className="form-control"
+              className="form-control card"
               placeholder="Search"
+              style={{
+                outlineWidth: "thin",
+                outlineColor: "black",
+                outlineStyle: "solid",
+                boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 1)",
+                transition: "0.3s",
+              }}
             />
           </div>
 
           <button
             onClick={handleSearch}
             className="btn btn-danger  rounded"
-            //sytle={{ color: "white" }}
+            style={{
+              backgroundColor: "#AA3A3A",
+              boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.8)",
+              transition: "0.3s",
+            }}
           >
             Search
           </button>
+          {name}
         </div>
       </form>
-      <div className=" row row-cols-2" style={{ paddingTop: "100px" }}>
+      <div className=" row row-cols-2" style={{ paddingTop: "150px" }}>
         {restaurants &&
           restaurants.map((restaurant) => {
             return (
@@ -119,87 +109,45 @@ export const Search = (props) => {
                 key={restaurant.id}
                 className="mr-auto"
                 style={{
-                  backgroundColor: "#f5f4db",
                   marginBottom: "50px",
                   paddingLeft: "2px",
                   boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.4)",
                   transition: "0.3s",
-                  //maxWidth: "50%",
                 }}
               >
-                <div className="card ">
-                  <h4 className="card-header">{restaurant.name}</h4>
-                  <div className="card-body">
-                    <h6 className="card-title">
-                      <strong>Location:</strong> {restaurant.location}
-                    </h6>
-                    <h6 className="card-title">
-                      <strong>Price Range(Less Than)</strong> :
-                      {restaurant.price_range}
-                    </h6>
-                    <h6 className="card-title">
-                      <strong>Ratings: </strong> :{renderRating(restaurant)}
-                    </h6>
+                <div
+                  className="card-header text-white"
+                  style={{
+                    background: "hsla(145, 84%, 15%, 1)",
+                    background:
+                      "linear-gradient(135deg, hsla(145, 84%, 15%, 1) 0%, hsla(161, 46%, 49%, 1) 100%)",
+                  }}
+                >
+                  <h5> {restaurant.name}</h5>
+                </div>
+                <div className="card-body" style={{ backgroundColor: "white" }}>
+                  <h6 className="card-title">
+                    <strong>Location:</strong> {restaurant.location}
+                  </h6>
+                  <h6 className="card-title">
+                    <strong>Price Range(Less Than)</strong> :
+                    {restaurant.price_range}
+                  </h6>
+                  <h6 className="card-title">
+                    <strong>Ratings: </strong> {renderRating(restaurant)}
+                  </h6>
 
-                    <button
-                      onClick={() => handleRestaurantSelect(restaurant.id)}
-                      className="btn btn-success"
-                    >
-                      View Comments
-                    </button>
-                  </div>
+                  <button
+                    onClick={() => handleRestaurantSelect(restaurant.id)}
+                    className="btn btn-success"
+                  >
+                    View Reviews
+                  </button>
                 </div>
               </div>
             );
           })}
       </div>
-
-      {/* <div className="list-group">
-        <table className="table table-hover align-middle">
-          <thead>
-            { (
-              <tr className="bg-primary">
-                <th scope="col">Restaurant</th>
-                <th scope="col">Location</th>
-                <th scope="col">Price_Range(&lt;)</th>
-                <th scope="col">Reviews</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-              </tr>
-            )}
-          </thead>
-
-          <tbody>
-            {restaurants &&
-              restaurants.map((restaurant) => {
-                return (
-                  <tr key={restaurant.id}>
-                    <td>{restaurant.name}</td>
-                    <td>{restaurant.location}</td>
-                    <td>{restaurant.price_range}</td>
-                    <td>reviews</td>
-                    <td>
-                      <div
-                        onClick={() => handleUpdate(restaurant.id)}
-                        className="btn btn-warning"
-                      >
-                        Edit
-                      </div>
-                    </td>
-                    <td>
-                      <div
-                        // onClick={() => handleDelete(restaurant.id)}
-                        className="btn btn-danger"
-                      >
-                        Delete
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div> */}
     </div>
   );
 };
